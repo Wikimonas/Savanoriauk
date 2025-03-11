@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureOrganiser;
 use App\Http\Middleware\LanguageMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
-            LanguageMiddleware::class
+            LanguageMiddleware::class,
+
+            //TODO: Fix this for guest users
+            //EnsureOrganiser::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

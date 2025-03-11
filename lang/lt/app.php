@@ -6,4 +6,7 @@ return [
     'language' => 'Kalba',
     'english' => 'Anglų',
     'lithuanian' => 'Lietuvių',
+    'login' => 'Prisijungti',
+    'register' => 'Registruotis',
+    'logout' => 'Atsijungti',
 ];

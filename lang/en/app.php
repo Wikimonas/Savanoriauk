@@ -6,4 +6,7 @@ return [
     'language' => 'Language',
     'english' => 'English',
     'lithuanian' => 'Lietuvių',
+    'login' => 'Login',
+    'register' => 'Register',
+    'logout' => 'Logout',
 ];
