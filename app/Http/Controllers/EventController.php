@@ -23,12 +23,14 @@ class EventController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'address' => 'required|string',
             'event_date' => 'required|date',
         ]);
 
         Event::create([
             'name' => $request->name,
             'description' => $request->description,
+            'address' => $request->address,
             'event_date' => $request->event_date,
             'organiser_id' => auth()->id(),
         ]);

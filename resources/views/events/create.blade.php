@@ -22,6 +22,11 @@
                 <input type="datetime-local" name="event_date" class="form-control" required>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Address</label>
+                <input type="text" name="address" class="form-control" required>
+            </div>
+
             <button type="submit" class="btn btn-success">Create Event</button>
         </form>
     </div>

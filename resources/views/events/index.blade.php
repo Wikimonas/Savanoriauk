@@ -18,7 +18,8 @@
             @foreach($events as $event)
                 <li class="list-group-item">
                     <strong>{{ $event->name }}</strong> - {{ $event->event_date }} <br>
-                    {{ $event->description }}
+                    {{ $event->description }} <br>
+                    <strong>Address:</strong> {{ $event->address }}
                 </li>
             @endforeach
         </ul>
