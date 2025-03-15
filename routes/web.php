@@ -12,19 +12,21 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/events', [EventController::class, 'index'])->name('events.index');
-
-// Only organisers can access these routes
-Route::middleware(['auth',EnsureOrganiser::class])->group(function () {
-    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::middleware(['auth'])->group(function () {
+    Route::middleware([EnsureOrganiser::class])->group(function (){
+        Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    });
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
-});
-
-Route::middleware('auth')->group(function () {
+    Route::get('/events/search', [EventController::class, 'search'])->name('events.search');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 require __DIR__.'/auth.php';
