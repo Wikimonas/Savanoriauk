@@ -9,7 +9,14 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::all();
+        $events = Event::paginate(10);
+        return view('events.index', compact('events'));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $events = Event::where('name',  'LIKE', "%$query%") -> orWhere('description', 'LIKE', "%$query%") ->paginate(10);
         return view('events.index', compact('events'));
     }
 
