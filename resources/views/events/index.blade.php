@@ -16,6 +16,7 @@
         @auth
             @if(auth()->user()->role === 'organiser')
                 <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">{{ __('app.create event') }}</a>
+                <a href="{{ route('events.manage') }}" class="btn btn-primary mb-3">{{ __('app.manage event') }}</a>
             @endif
         @endauth
 

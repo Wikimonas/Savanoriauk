@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -42,6 +43,26 @@ class EventController extends Controller
             'organiser_id' => auth()->id(),
         ]);
 
+
         return redirect()->route('events.index')->with('success', 'Event created successfully!');
     }
+
+    public function manage()
+    {
+        $userId = Auth::id(); // Get logged-in user ID
+
+        // Fetch events for the logged-in organizer
+        $events = Event::where('organiser_id', $userId)->get();
+
+        return view('events.manage', compact('events')); // Send data to the view
+    }
+
+    public function destroy($id)
+    {
+        $event = Event::findOrFail($id);
+
+        $event->delete();
+        return redirect()->route('events.manage')->with('success', 'Event deleted successfully.');
+    }
+
 }
