@@ -32,5 +32,8 @@ return [
     'search' => 'Ieškoti',
     'delete' => 'Ištrinti',
     'action' => 'Veiksmas',
+    'edit' => 'Redaguoti',
+    'edit event' => 'Redaguoti renginį',
+    'save' => 'Išsaugoti',
     'no events found' => 'Renginių nerasta',
 ];

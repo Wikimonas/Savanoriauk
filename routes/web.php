@@ -16,6 +16,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([EnsureOrganiser::class])->group(function (){
         Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
         Route::get('/events/manage', [EventController::class, 'manage'])->name('events.manage');
+        Route::get('/events/manage/edit/{id}', [EventController::class, 'edit'])->name('events.edit');
+        Route::put('/events/manage/edit/update/{id}', [EventController::class, 'update'])->name('events.update');
         Route::delete('/events/delete/{id}', [EventController::class, 'destroy'])->name('events.destroy');
     });
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
