@@ -60,7 +60,6 @@ class EventController extends Controller
 
     public function update(Request $request, $id)
     {
-        Log::info('Update function called for event');
 
         $event = Event::find($id);
 
@@ -68,7 +67,6 @@ class EventController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        Log::info('✅ Event found: ', ['event' => $event, 'request' => $request->all()]);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -95,7 +93,6 @@ class EventController extends Controller
             'organiser_id'
         ]));
 
-        Log::info('Event updated successfully: ', ['event' => $event]);
         return redirect()->route('events.manage')->with('success', 'Event updated successfully!');
     }
     public function edit($id)
