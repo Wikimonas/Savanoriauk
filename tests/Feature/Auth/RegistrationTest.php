@@ -21,12 +21,30 @@ class RegistrationTest extends TestCase
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'phone' => '123456789',
+            'address' => '123 Main Street',
+            'role' => 'user',
             'password' => 'password',
             'password_confirmation' => 'password',
-            'role' => 'user',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('welcome', absolute: false));
+
+        $response->assertRedirect(route('welcome'));
     }
+
+    public function test_registration_fails_without_required_fields(): void
+    {
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'email' => 'invalid@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            // Missing phone, address, and role
+        ]);
+
+        $response->assertSessionHasErrors(['phone', 'address', 'role']);
+        $this->assertGuest();
+    }
+
 }

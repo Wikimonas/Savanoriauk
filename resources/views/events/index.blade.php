@@ -28,7 +28,33 @@
                     <li class="list-group-item">
                         <a href="{{ route('events.index', $event->id) }}"><strong>{{ $event->name }}</strong></a> - {{ $event->event_date }} <br>
                         {{ $event->description }} <br>
-                        <strong>{{ __('app.address') }}:</strong> {{ $event->address }}
+                        <strong>{{ __('app.address') }}:</strong> {{ $event->address }} <br>
+
+                        @auth
+                            @if(auth()->user()->role === 'user')
+                                @php
+                                    $application = $event->applications->firstWhere('user_id', auth()->id());
+                                @endphp
+
+                                @if($application)
+                                    <p class="mt-2">
+                                        <strong>{{ __('app.application status') }}:</strong>
+                                        @if($application->status === 'pending')
+                                            <span class="badge bg-warning text-dark">{{ __('app.pending') }}</span>
+                                        @elseif($application->status === 'accepted')
+                                            <span class="badge bg-success">{{ __('app.accepted') }}</span>
+                                        @elseif($application->status === 'denied')
+                                            <span class="badge bg-danger">{{ __('app.denied') }}</span>
+                                        @endif
+                                    </p>
+                                @else
+                                    <a href="{{ route('events.apply', $event->id) }}" class="btn btn-success mt-2">{{ __('app.apply') }}</a>
+                                @endif
+                            @endif
+
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary mt-2">{{ __('app.login to apply') }}</a>
+                        @endauth
                     </li>
                 @endforeach
             </ul>
