@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class EventFactory extends Factory
 {
@@ -18,7 +17,7 @@ class EventFactory extends Factory
             'description' => $this->faker->paragraph(),
             'address' => $this->faker->address(),
             'event_date' => $this->faker->dateTimeBetween('+1 week', '+1 year'),
-            'organiser_id' => User::factory()->organiser()->create(), // Generates a related User
+            'organiser_id' => User::factory()->organiser(),
         ];
     }
 }

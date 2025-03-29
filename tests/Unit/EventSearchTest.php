@@ -4,77 +4,45 @@ namespace Tests\Unit;
 
 use App\Models\Event;
 use App\Http\Controllers\EventController;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
-use Mockery;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 class EventSearchTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
+    use RefreshDatabase;
 
     #[Test]
     public function it_returns_matching_events_based_on_query(): void
     {
-        // Setup mock and expectations
-        $this->mockEventSearch('Charity', [
-            (object) ['name' => 'Charity Marathon', 'description' => 'A fun event'],
-        ]);
+        // Arrange: Create events in the database
+        $matchingEvent = Event::factory()->create(['name' => 'Charity Marathon', 'description' => 'A fun event']);
+        Event::factory(3)->create(); // Create some unrelated events
 
-        // Execute search
+        // Act: Execute search
         $result = $this->executeSearch('Charity');
 
-        // Assert results
+        // Assert: Check if the correct events are returned
         $this->assertInstanceOf(View::class, $result);
-        $this->assertCount(1, $result->getData()['events']);
+        $events = $result->getData()['events'];
+        $this->assertCount(1, $events);
+        $this->assertEquals('Charity Marathon', $events->first()->name);
     }
 
     #[Test]
     public function it_returns_no_events_when_nothing_matches(): void
     {
-        // Setup mock and expectations
-        $this->mockEventSearch('NonExistent', []);
+        // Arrange: Create some events that don't match the search query
+        Event::factory(3)->create(['name' => 'Random Event', 'description' => 'Some description']);
 
-        // Execute search
+        // Act: Execute search with a non-matching query
         $result = $this->executeSearch('NonExistent');
 
-        // Assert results
+        // Assert: Ensure no events are returned
         $this->assertInstanceOf(View::class, $result);
         $this->assertCount(0, $result->getData()['events']);
-    }
-
-    /**
-     * Helper method to set up the Event mock
-     */
-    private function mockEventSearch(string $query, array $results): void
-    {
-        $eventMock = Mockery::mock('alias:' . Event::class);
-
-        $eventMock->shouldReceive('where')
-            ->with('name', 'LIKE', "%{$query}%")
-            ->andReturnSelf();
-
-        $eventMock->shouldReceive('orWhere')
-            ->with('description', 'LIKE', "%{$query}%")
-            ->andReturnSelf();
-
-        // Create paginator with results
-        $paginator = new LengthAwarePaginator(
-            $results,
-            count($results),
-            10,
-            1
-        );
-
-        $eventMock->shouldReceive('paginate')
-            ->with(10)
-            ->andReturn($paginator);
     }
 
     /**

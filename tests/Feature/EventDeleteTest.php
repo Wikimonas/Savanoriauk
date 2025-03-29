@@ -11,6 +11,8 @@ use Tests\TestCase;
 
 class EventDeleteTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[Test] public function organiser_can_delete_event()
     {
         // Create an organizer
