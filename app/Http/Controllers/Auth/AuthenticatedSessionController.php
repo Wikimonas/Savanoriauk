@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LogHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +29,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        LogHelper::logAction('User logged in', $request);
+
         return redirect()->intended(route('welcome', absolute: false));
     }
 
@@ -36,6 +39,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        LogHelper::logAction('User logged out', $request);
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

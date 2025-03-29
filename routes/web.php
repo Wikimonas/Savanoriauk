@@ -4,8 +4,11 @@ use App\Http\Controllers\EventApplicationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventQuestionController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureOrganiser;
+use App\Models\ActionLog;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/language/{lang}', [LanguageController::class, 'switchLang'])->name('lang.switch');
@@ -40,5 +43,14 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::middleware(['auth'])->group(function () {
+    Route::middleware([EnsureAdmin::class])->group(function (){
+        Route::get('/admin/logs', function () {
+            return view('dashboard', ['logs' => ActionLog::latest()]);
+        })->middleware('auth')->name('dashboard.logs');
+        Route::get('/admin/logs', [LogController::class, 'index'])->name('logs.index');
+    });
+});
 
 require __DIR__.'/auth.php';
