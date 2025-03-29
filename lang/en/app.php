@@ -32,5 +32,8 @@ return [
     'search' => 'Search',
     'delete' => 'Delete',
     'action' => 'Action',
+    'edit' => 'Edit',
+    'edit event' => 'Edit Event',
+    'save' => 'Save',
     'no events found' => 'No events found',
 ];
