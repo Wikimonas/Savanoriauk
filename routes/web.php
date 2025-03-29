@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\EventApplicationController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventQuestionController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\EnsureOrganiser;
@@ -19,7 +21,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/events/manage/edit/{id}', [EventController::class, 'edit'])->name('events.edit');
         Route::put('/events/manage/edit/update/{id}', [EventController::class, 'update'])->name('events.update');
         Route::delete('/events/delete/{id}', [EventController::class, 'destroy'])->name('events.destroy');
+        Route::post('/events/{event}/questions', [EventQuestionController::class, 'store'])->name('event_questions.store');
+        Route::delete('/questions/{question}', [EventQuestionController::class, 'destroy'])->name('event_questions.destroy');
     });
+    Route::get('/events/{event}/applications', [EventApplicationController::class, 'index'])->name('events.applications');
+    Route::patch('/applications/{application}/status', [EventApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
+    Route::get('/events/{event}/apply', [EventApplicationController::class, 'showApplicationForm'])->name('events.apply');
+    Route::post('/events/{event}/apply', [EventApplicationController::class, 'store'])->name('events.apply.store');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events/search', [EventController::class, 'search'])->name('events.search');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

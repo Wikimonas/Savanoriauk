@@ -35,6 +35,9 @@
                                 <a href="{{ route('events.edit', $event->id) }}" class="btn btn-primary">{{__('app.edit')}}</a>
                             </td>
                             <td>
+                                <a href="{{ route('events.applications', $event->id) }}" class="btn btn-info btn-sm">
+                                    {{ __('app.view applications') }}
+                                </a>
                                 <form action="{{ route('events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
                                     @csrf
                                     @method('DELETE')
