@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class EventController extends Controller
             'event_date' => 'required|date',
         ]);
 
-        Event::create([
+        $event = Event::create([
             'name' => $request->name,
             'description' => $request->description,
             'address' => $request->address,
@@ -44,6 +45,7 @@ class EventController extends Controller
             'organiser_id' => auth()->id(),
         ]);
 
+        LogHelper::logAction('Event created', $event);
 
         return redirect()->route('events.manage')->with('success', 'Event created successfully!');
     }
@@ -66,7 +68,7 @@ class EventController extends Controller
         if (auth()->id() !== $event->organiser_id) {
             abort(403, 'Unauthorized action.');
         }
-
+        $oldData = $event->toArray();
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -93,6 +95,12 @@ class EventController extends Controller
             'organiser_id'
         ]));
 
+        LogHelper::logAction('Event updated', $event,
+        [
+            'before' => $oldData,
+            'after' => $event->toArray()
+        ]);
+
         return redirect()->route('events.manage')->with('success', 'Event updated successfully!');
     }
     public function edit($id)
@@ -115,6 +123,7 @@ class EventController extends Controller
         }
         else
         {
+            LogHelper::logAction('Event Deleted', $event);
             $event->delete();
             return redirect()->route('events.manage')->with('success', 'Event deleted successfully.');
         }
