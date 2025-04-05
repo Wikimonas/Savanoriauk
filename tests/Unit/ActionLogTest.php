@@ -31,8 +31,9 @@ class ActionLogTest extends TestCase
         $this->assertIsArray($actionLog->changes);
         $this->assertEquals(['name' => 'Updated name'], $actionLog->changes);
     }
-    
-    #[Test] public function it_creates_an_action_log_entry()
+
+    #[Test]
+    public function it_creates_an_action_log_entry()
     {
         // Create a user
         $user = User::factory()->create();
@@ -43,23 +44,28 @@ class ActionLogTest extends TestCase
             'action' => 'User logged in',
             'model_type' => 'App\Models\User',
             'model_id' => $user->id,
-            'changes' => ['name' => 'Updated name'],
+            'changes' => ['name' => 'Updated name'], // Array; Laravel will cast it
             'ip_address' => '127.0.0.1',
         ]);
 
-        // Assert that the action log is stored in the database
+        // Assert main columns exist in the database
         $this->assertDatabaseHas('action_logs', [
             'user_id' => $user->id,
             'action' => 'User logged in',
             'model_type' => 'App\Models\User',
             'model_id' => $user->id,
-            'changes' => json_encode(['name' => 'Updated name']), // Store as JSON
             'ip_address' => '127.0.0.1',
         ]);
 
-        // Assert the action log exists
+        // Assert JSON column value using path syntax (works cross-env)
+        $this->assertDatabaseHas('action_logs', [
+            'changes->name' => 'Updated name',
+        ]);
+
+        // Optional: Confirm the model was saved
         $this->assertTrue($actionLog->exists);
     }
+
 
     #[Test] public function it_belongs_to_a_user()
     {
