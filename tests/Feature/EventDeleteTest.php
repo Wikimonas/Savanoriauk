@@ -13,6 +13,26 @@ class EventDeleteTest extends TestCase
 {
     use RefreshDatabase;
 
+    #[Test] public function non_organiser_cannot_delete_event()
+    {
+        // Create an organizer and another user
+        $organizer = User::factory()->organiser()->create();
+        $randomUser = User::factory()->create();
+
+        // Create an event
+        $event = Event::factory()->create(['organiser_id' => $organizer->id]);
+
+        // Act as the random user
+        $this->actingAs($randomUser);
+
+        // Attempt to delete event
+        $response = $this->delete(route('events.destroy', $event->id));
+
+        // Assert event still exists
+        $this->assertDatabaseHas('events', ['id' => $event->id]);
+
+    }
+
     #[Test] public function organiser_can_delete_event()
     {
         // Create an organizer
@@ -32,26 +52,6 @@ class EventDeleteTest extends TestCase
 
         // Assert redirection after deletion
         $response->assertRedirect(route('events.manage'));
-    }
-
-    #[Test] public function non_organiser_cannot_delete_event()
-    {
-        // Create an organizer and another user
-        $organizer = User::factory()->organiser()->create();
-        $randomUser = User::factory()->create();
-
-        // Create an event
-        $event = Event::factory()->create(['organiser_id' => $organizer->id]);
-
-        // Act as the random user
-        $this->actingAs($randomUser);
-
-        // Attempt to delete event
-        $response = $this->delete(route('events.destroy', $event->id));
-
-        // Assert event still exists
-        $this->assertDatabaseHas('events', ['id' => $event->id]);
-
     }
 
     #[Test] public function organiser_can_view_their_events()
