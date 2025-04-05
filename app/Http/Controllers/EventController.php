@@ -18,6 +18,9 @@ class EventController extends Controller
 
     public function search(Request $request)
     {
+        $request->validate([
+            'query' => 'required|string|min:3',
+        ]);
         $query = $request->input('query');
         $events = Event::where('name',  'LIKE', "%$query%") -> orWhere('description', 'LIKE', "%$query%") ->paginate(10);
         return view('events.index', compact('events'));
@@ -34,7 +37,7 @@ class EventController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'address' => 'required|string',
-            'event_date' => 'required|date',
+            'event_date' => 'required|date|after:today',
         ]);
 
         $event = Event::create([

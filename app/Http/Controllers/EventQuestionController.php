@@ -10,7 +10,7 @@ class EventQuestionController extends Controller
 {
     public function store(Request $request, Event $event)
     {
-        $request->validate(['question' => 'required|string|max:255']);
+        $request->validate(['question' => 'required|string|max:255|min:5']);
 
         EventQuestion::create([
             'event_id' => $event->id,
@@ -20,13 +20,14 @@ class EventQuestionController extends Controller
         return redirect()->route('events.edit', $event->id)->with('success', 'Question added!');
     }
 
-    public function destroy(EventQuestion $question)
+    public function destroy($id)
     {
-        $question->delete();
+        $question = EventQuestion::findOrFail($id); // returns 404 if not found
+
         $eventId = $question->event_id;
+        $question->delete();
 
         return redirect()->route('events.edit', $eventId)->with('success', 'Question deleted.');
-
     }
 }
 
