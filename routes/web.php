@@ -53,4 +53,6 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+//pipeline test
+
 require __DIR__.'/auth.php';
