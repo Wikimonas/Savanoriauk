@@ -54,22 +54,34 @@ class EventDeleteTest extends TestCase
         $response->assertRedirect(route('events.manage'));
     }
 
-    #[Test] public function organiser_can_view_their_events()
+    #[Test] public function organiser_cannot_delete_another_organisers_event()
     {
-        // Create an organizer
-        $organizer = User::factory()->organiser()->create();
+        $organiser1 = User::factory()->create(['role' => 'organiser']);
+        $organiser2 = User::factory()->create(['role' => 'organiser']);
 
-        // Create multiple events
-        Event::factory()->count(5)->create(['organiser_id' => $organizer->id]);
+        $event = Event::factory()->create([
+            'organiser_id' => $organiser1->id,
+        ]);
 
-        // Act as organizer
-        $this->actingAs($organizer);
+        $response = $this->actingAs($organiser2)
+            ->delete(route('events.destroy', $event->id));
 
-        // Visit the manage page
-        $response = $this->get(route('events.manage'));
-
-        // Assert events appear
-        $response->assertSee('Manage your events');
-        $this->assertEquals(5, Event::where('organiser_id', $organizer->id)->count());
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+        ]);
     }
+
+    #[Test] public function deleting_a_nonexistent_event_returns_404()
+    {
+        $organiser = \App\Models\User::factory()->create(['role' => 'organiser']);
+
+        $nonExistentEventId = 999;
+
+        $response = $this->actingAs($organiser)
+            ->delete(route('events.destroy', $nonExistentEventId));
+
+        $response->assertNotFound(); // or ->assertStatus(404);
+    }
+
 }

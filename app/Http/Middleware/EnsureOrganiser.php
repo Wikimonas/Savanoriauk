@@ -18,7 +18,7 @@ class EnsureOrganiser
         //TODO: Fix this for guest users
 
         if ($request->user()->role !== 'organiser') {
-            return redirect('/')->with('error', 'Unauthorized access!');
+            abort(403, 'Forbidden');
         }
         return $next($request);
     }
