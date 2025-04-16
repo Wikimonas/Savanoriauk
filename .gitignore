@@ -10,6 +10,7 @@
 /public/mix-manifest.json
 /storage/*.key
 /vendor
+/cert
 .env
 .env.backup
 .phpunit.result.cache
