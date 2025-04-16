@@ -46,6 +46,10 @@
                 <button type="submit" class="btn btn-success">{{ __('app.add question') }}</button>
             </div>
         </form>
+        <form method="POST" action="{{ route('event_questions.suggest', $event->id) }}">
+            @csrf
+            <button type="submit" class="btn btn-info">Generate Questions (AI)</button>
+        </form>
 
         @if ($event->questions->isNotEmpty())
             <ul class="list-group">

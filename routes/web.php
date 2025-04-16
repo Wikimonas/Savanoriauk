@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/events/delete/{id}', [EventController::class, 'destroy'])->name('events.destroy');
         Route::post('/events/{event}/questions', [EventQuestionController::class, 'store'])->name('event_questions.store');
         Route::delete('/questions/{question}', [EventQuestionController::class, 'destroy'])->name('event_questions.destroy');
+        Route::post('/events/{event}/questions/suggest', [EventQuestionController::class, 'suggest'])->name('event_questions.suggest');
     });
     Route::get('/events/{event}/applications', [EventApplicationController::class, 'index'])->name('events.applications');
     Route::patch('/applications/{application}/status', [EventApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
