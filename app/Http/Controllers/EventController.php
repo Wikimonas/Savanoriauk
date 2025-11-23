@@ -73,8 +73,10 @@ class EventController extends Controller
         return view('events.edit', compact('event'));
     }
 
-    public function update(UpdateEventRequest $request, Event $event)
+    public function update(UpdateEventRequest $request, int $id)
     {
+        $event = Event::findOrFail($id);
+        
         $this->authorizeOrganizer($event);
 
         $oldData = $event->toArray();
@@ -98,8 +100,10 @@ class EventController extends Controller
             ->with('success', 'Event updated successfully!');
     }
 
-    public function destroy(Event $event)
+    public function destroy(int $id)
     {
+        $event = Event::findOrFail($id);
+
         $this->authorizeOrganizer($event);
 
         LogHelper::logAction('Event Deleted', $event);

@@ -15,7 +15,7 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    private const MAX_LENGTH = 255;
+    private const MAX_LENGTH = 'max:255';
 
     /**
      * Display the registration view.

@@ -33,7 +33,7 @@ class EventDeleteTest extends TestCase
 
     }
 
-    #[Test] public function organiser_can_delete_event()
+    #[Test] public function organiser_can_delete_event(): void
     {
         // Create an organizer
         $organizer = User::factory()->organiser()->create();
