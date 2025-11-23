@@ -15,8 +15,6 @@ class EnsureOrganiser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //TODO: Fix this for guest users
-
         if ($request->user()->role !== 'organiser') {
             abort(403, 'Forbidden');
         }

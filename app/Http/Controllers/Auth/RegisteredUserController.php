@@ -15,6 +15,8 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    private const MAX_LENGTH = 255;
+
     /**
      * Display the registration view.
      */
@@ -31,10 +33,10 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', self::MAX_LENGTH],
+            'email' => ['required', 'string', 'lowercase', 'email', self::MAX_LENGTH, 'unique:' . User::class],
+            'phone' => ['required', 'string', self::MAX_LENGTH],
+            'address' => ['required', 'string', self::MAX_LENGTH],
             'role' => ['required', 'in:user,organiser'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
