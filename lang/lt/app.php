@@ -57,4 +57,5 @@ return [
     'login to apply' => 'Prisijunkite, kad galėtumėte registruotis',
     'answers to questions' => 'Atsakymai į klausimus',
     'phone' => 'Telefono numeris',
+    'test' =>'test for github pipeline',
 ];
